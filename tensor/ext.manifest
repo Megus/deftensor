@@ -1,0 +1,27 @@
+name: "DefTensor"
+
+platforms:
+    arm64-ios:
+        context:
+            flags:      ["-stdlib=libc++", "-std=c++11"]
+            linkFlags:  ["-ObjC"]
+            libs:       ["c++"]
+            frameworks: ["Accelerate"]
+
+    armv7-ios:
+        context:
+            flags:      ["-stdlib=libc++", "-std=c++11"]
+            linkFlags:  ["-ObjC"]
+            libs:       ["c++"]
+            frameworks: ["Accelerate"]
+
+    armv7-android:
+        context:
+            flags:      ["-std=c++11"]
+
+    x86_64-osx:
+        context:
+            flags:      ["-stdlib=libc++", "-std=c++11"]
+            linkFlags:  ["-ObjC"]
+            libs:       ["c++"]
+            frameworks: ["Accelerate"]

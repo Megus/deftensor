@@ -1,0 +1,9 @@
+images {
+  image: "/assets/guess_button.png"
+}
+images {
+  image: "/assets/clear_button.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

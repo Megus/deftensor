@@ -1,0 +1,21 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[project]
+title = DefTensor
+custom_resources = res/
+
+[ios]
+bundle_identifier = studio.wisehedgehog.deftensor
+
+[android]
+package = studio.wisehedgehog.deftensor
+
+[display]
+width = 640
+height = 960
+high_dpi = 1
+

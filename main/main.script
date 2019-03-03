@@ -1,0 +1,165 @@
+local digit = {
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+}
+
+local drawing = false
+local old_x = 0
+local old_y = 0
+
+
+local function run_model(data)
+	local result = DefTensor.run_model(data)
+	
+	if result ~= null and #result > 0 then
+		local s = ""
+		local max = result[1]
+		local max_idx = 1
+		for i, v in ipairs(result) do
+			s = s .. math.floor(v * 100) .. ","
+			if v > max then
+				max = v
+				max_idx = i
+			end
+		end
+		if max > 0.5 then
+			label.set_text("#label", "It's " .. (max_idx - 1) .. "!")
+		else
+			label.set_text("#label", "I don't know this digit")
+		end
+		pprint(s)
+	end
+end
+
+
+local function in_guess_button(action)
+	return action.x >= 270 and action.x <= 390 and action.y >= 158 and action.y <= 212
+end
+
+local function in_clear_button(action)
+	return action.x >= 270 and action.x <= 390 and action.y >= 728 and action.y <= 772
+end
+
+local function tile_coord(action)
+	local x = action.x - 96
+	local y = action.y - 256
+	x = math.floor(x / 16)
+	y = math.floor(y / 16)
+	if x < 0 or y < 0 or x > 27 or y > 27 then
+		return nil, nil
+	else
+		return x, y
+	end
+end
+
+local function clear_digit()
+	for i = 1, 28 do
+		for j = 1, 28 do
+			tilemap.set_tile("#digit_tilemap", "layer1", i, j, 1)
+		end
+	end
+	for i = 1, 28 * 28 do
+		digit[i] = 0
+	end
+end
+
+local function draw(x, y, action)
+	local should_draw = false
+	if action.released then
+		drawing = false
+		return
+	end
+	if drawing == false then
+		drawing = true
+		should_draw = true
+		old_x = x
+		old_y = y
+	else
+		if old_x ~= x or old_y ~= y then
+			should_draw = true
+		end
+		old_x = x
+		old_y = y
+	end
+
+	if should_draw then
+		if digit[x + (27 - y) * 28 + 1] == 0 then
+			digit[x + (27 - y) * 28 + 1] = 1
+			tilemap.set_tile("#digit_tilemap", "layer1", x + 1, y + 1, 2)
+		else
+			digit[x + (27 - y) * 28 + 1] = 0
+			tilemap.set_tile("#digit_tilemap", "layer1", x + 1, y + 1, 1)
+		end
+	end
+end
+
+function init(self)
+	local mnist = resource.load("/res/mnist.tflite")
+	local success = DefTensor.load_model(mnist)
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") then
+		if action.released and in_guess_button(action) then
+			run_model(digit)
+		end
+		if action.released and in_clear_button(action) then
+			clear_digit()
+		end
+		local x, y = tile_coord(action)
+		if x ~= nil and y ~= nil then
+			draw(x, y, action)
+		else
+			drawing = false
+		end
+	end
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
